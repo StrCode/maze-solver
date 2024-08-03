@@ -3,8 +3,6 @@ from tkinter import Tk, Canvas
 
 class Window:
     def __init__(self, width, height) -> None:
-        self.width = width
-        self.height = height
         self.__root = Tk()
         self.__root.title("Maze Solver")
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
