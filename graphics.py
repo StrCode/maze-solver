@@ -21,7 +21,7 @@ class Window:
         while self.__running:
             self.redraw()
 
-    def draw_line(self, line, fill_color):
+    def draw_line(self, line, fill_color="black"):
         line.draw(self.__canvas, fill_color)
 
     def close(self):
@@ -35,16 +35,16 @@ class Point:
 
 
 class Line:
-    def __init__(self, point1: Point, point2: Point) -> None:
-        self.point1 = point1
-        self.point2 = point2
+    def __init__(self, pt1: Point, pt2: Point) -> None:
+        self.pt1 = pt1
+        self.pt2 = pt2
 
     def draw(self, canvas: Canvas, fill_color: str):
         canvas.create_line(
-            self.point1.x,
-            self.point1.y,
-            self.point2.x,
-            self.point2.y,
+            self.pt1.x,
+            self.pt1.y,
+            self.pt2.x,
+            self.pt2.y,
             fill=fill_color,
             width=2,
         )
