@@ -31,3 +31,12 @@ class Tests:
         m1._break_entrance_and_exit()
         exit_cell = m1._cells[num_cols - 1][num_rows - 1]
         assert exit_cell.has_bottom_wall is False
+
+    def test_reset_visited_cells(self):
+        num_cols = 5
+        num_rows = 6
+        m1 = Maze(0, 0, num_rows, num_cols, 12, 12, None)
+        m1._break_entrance_and_exit()
+        for col in m1._cells:
+            for cell in col:
+                assert cell.visited is False
