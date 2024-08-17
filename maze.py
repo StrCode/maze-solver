@@ -22,6 +22,7 @@ class Maze:
 
         self._create_cells()
         self._break_entrance_and_exit()
+        self._break_walls_r(0, 0)
 
     def _create_cells(self):
         self._cells = [
@@ -51,37 +52,57 @@ class Maze:
         self._draw_cell(lst_col, lst_row)
 
     def _break_walls_r(self, i: int, j: int):
-        first_cell = self._cells[i][j]
-        first_cell.visited = True
+        self._cells[i][j].visited = True
         while True:
-            to_visit = []
-            adjacent_left = self._cells[i - 1][j]
-            adjacent_right = self._cells[i + 1][j]
-            adjacent_bottom = self._cells[i][j + 1]
-            adjacent_top = self._cells[i][j - 1]
+            next_index_list = []
 
-            if adjacent_left and adjacent_left.visited is False:
-                to_visit.append(adjacent_left)
+            # determine which cell(s) to visit next
+            # left
+            if i > 0 and not self._cells[i - 1][j].visited:
+                next_index_list.append((i - 1, j))
 
-            if adjacent_right and adjacent_right.visited is False:
-                to_visit.append(adjacent_right)
+            # right
+            if i < self._num_cols - 1 and not self._cells[i + 1][j].visited:
+                next_index_list.append((i + 1, j))
 
-            if adjacent_bottom and adjacent_bottom.visited is False:
-                to_visit.append(adjacent_bottom)
+            # bottom
+            if j < self._num_rows - 1 and not self._cells[i][j + 1].visited:
+                next_index_list.append((i, j + 1))
 
-            if adjacent_top and adjacent_top.visited is False:
-                to_visit.append(adjacent_top)
+            # up
+            if j > 0 and not self._cells[i][j - 1].visited:
+                next_index_list.append((i, j - 1))
 
-            if len(to_visit) == 0:
+            # if there is nowhere to go from here
+            # just break out
+            if len(next_index_list) == 0:
                 self._draw_cell(i, j)
                 return
-            else:
-                rand_num = random.randrange(0, len(to_visit))
-                selected_cell = to_visit[rand_num]
 
-                # TODO: create a function that knocks down walls between current and selected cell
+            # randomly choose the next direction to go
+            direction_index = random.randrange(len(next_index_list))
+            next_index = next_index_list[direction_index]
 
-                print(selected_cell)
+            # knock out walls between this cell and the next cell(s)
+            # right
+            if next_index[0] == i + 1:
+                self._cells[i][j].has_right_wall = False
+                self._cells[i + 1][j].has_left_wall = False
+            # left
+            if next_index[0] == i - 1:
+                self._cells[i][j].has_left_wall = False
+                self._cells[i - 1][j].has_right_wall = False
+            # down
+            if next_index[1] == j + 1:
+                self._cells[i][j].has_bottom_wall = False
+                self._cells[i][j + 1].has_top_wall = False
+            # up
+            if next_index[1] == j - 1:
+                self._cells[i][j].has_top_wall = False
+                self._cells[i][j - 1].has_bottom_wall = False
+
+            # recursively visit the next cell
+            self._break_walls_r(next_index[0], next_index[1])
 
     def _animate(self):
         if self._win is None:
